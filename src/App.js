@@ -1,29 +1,36 @@
 import React, { Component } from 'react';
-
 import { Router } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router'
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor, getHistory } from './Store';
-import './app.css';
-// Routes
+import { createBrowserHistory } from 'history';
+import { Chart } from 'react-chartjs-2';
+import { ThemeProvider } from '@material-ui/styles';
+import validate from 'validate.js';
+
+import { chartjs } from './helpers';
+import theme from './theme';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import './assets/scss/index.scss';
+import validators from './common/validators';
 import Routes from './Routes';
-import Dashboard from './containers/Dashboard';
 
-const history = getHistory()
+const browserHistory = createBrowserHistory();
+
+Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
+  draw: chartjs.draw
+});
+
+validate.validators = {
+  ...validate.validators,
+  ...validators
+};
+
 export default class App extends Component {
-    render() {
-        return (
-            <Provider store={store}>
-                <ConnectedRouter history={history}> { /* place ConnectedRouter under Provider */}
-                    <Router history={history}>
-                        <PersistGate persistor={persistor}>
-                          <Routes />
-                        </PersistGate>
-                    </Router>
-                </ConnectedRouter>
-
-            </Provider>
-        );
-    }
+  render() {
+    return (
+      <ThemeProvider theme={theme}>
+        <Router history={browserHistory}>
+          <Routes />
+        </Router>
+      </ThemeProvider>
+    );
+  }
 }
