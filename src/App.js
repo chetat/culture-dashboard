@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { Router } from 'react-router-dom';
+import { ConnectedRouter } from 'connected-react-router'
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor, getHistory } from './Store';
+import './app.css';
+// Routes
+import Routes from './Routes';
+import Dashboard from './containers/Dashboard';
+
+const history = getHistory()
+export default class App extends Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <ConnectedRouter history={history}> { /* place ConnectedRouter under Provider */}
+                    <Router history={history}>
+                        <PersistGate persistor={persistor}>
+                          <Routes />
+                        </PersistGate>
+                    </Router>
+                </ConnectedRouter>
+
+            </Provider>
+        );
+    }
 }
-
-export default App;
