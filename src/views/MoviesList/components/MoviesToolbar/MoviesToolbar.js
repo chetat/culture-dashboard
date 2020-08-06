@@ -9,22 +9,29 @@ import {
     CardActions,
     Divider,
     Grid,
+    DialogContent,
+    DialogTitle,
+    Dialog,
+    Select,
+    InputLabel,
+    FormControl,
     Button,
     TextField
 } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { SearchInput } from 'components';
-import { useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { addMovie, fetchMoviesTypes, fetchMoviesGenres } from '../../../../actions/moviesAction';
 
 
 const useStyles = makeStyles(theme => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+    selectEmpty: {
+        marginTop: theme.spacing(2),
+    },
     root: {},
     row: {
         height: '42px',
@@ -50,7 +57,10 @@ const MoviesToolbar = props => {
     const { className, ...rest } = props;
     const [open, setOpen] = useState(false);
     const [values, setValues] = useState({});
+
     const dispatch = useDispatch()
+    const classes = useStyles();
+
 
     useEffect(() => {
         dispatch(fetchMoviesGenres())
@@ -59,21 +69,8 @@ const MoviesToolbar = props => {
         dispatch(fetchMoviesTypes())
     }, [dispatch])
 
-
-    const states = [
-        {
-            value: 'alabama',
-            label: 'Alabama'
-        },
-        {
-            value: 'new-york',
-            label: 'New York'
-        },
-        {
-            value: 'san-francisco',
-            label: 'San Francisco'
-        }
-    ];
+    const genres = useSelector((state) => state.movies.genres);
+    const types = useSelector((state) => state.movies.types)
 
     const handleChange = event => {
         setValues({
@@ -81,7 +78,6 @@ const MoviesToolbar = props => {
             [event.target.name]: event.target.value
         });
     };
-    const classes = useStyles();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -93,9 +89,23 @@ const MoviesToolbar = props => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(values)
+        const movie = {
+            genre_id: values.genre,
+            type_id: values.type,
+            title: values.title,
+            synopsis: values.synopsis,
+            pg: values.rating,
+            trailer_url: values.trailer_url,
+            cover_url: values.cover_url,
+            duration: values.duration,
+            category_id: 2
+
+        }
+        dispatch(addMovie(movie))
         setOpen(false)
+        console.log(values)
     }
+
 
     return (
         <div
@@ -156,6 +166,10 @@ const MoviesToolbar = props => {
                                     xs={12}
                                 >
                                     <TextField
+                                        placeholder="Enter Movie Synopsis"
+                                        multiline
+                                        rows={2}
+                                        rowsMax={Infinity}
                                         fullWidth
                                         label="Movie Synopsis"
                                         margin="dense"
@@ -168,59 +182,28 @@ const MoviesToolbar = props => {
                                 </Grid>
                                 <Grid
                                     item
-                                    xs={12}
-                                >
-                                    <TextField
-                                        fullWidth
-                                        label="Genre"
-                                        margin="dense"
-                                        name="genre"
-                                        onChange={handleChange}
-                                        required
-                                        value={values.genre || ''}
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
                                     md={6}
                                     xs={12}
                                 >
                                     <TextField
                                         fullWidth
-                                        label="Phone Number"
+                                        label="Select Movie Type"
                                         margin="dense"
-                                        name="phone"
-                                        onChange={handleChange}
-                                        type="number"
-                                        value={values.phone || ''}
-                                        variant="outlined"
-                                    />
-                                </Grid>
-                                <Grid
-                                    item
-                                    md={6}
-                                    xs={12}
-                                >
-                                    <TextField
-                                        fullWidth
-                                        label="Select State"
-                                        margin="dense"
-                                        name="state"
+                                        name="type"
                                         onChange={handleChange}
                                         required
                                         select
                                         // eslint-disable-next-line react/jsx-sort-props
                                         SelectProps={{ native: true }}
-                                        value={values.state}
+                                        value={values.type || '1'}
                                         variant="outlined"
                                     >
-                                        {states.map(option => (
+                                        {types.map(type => (
                                             <option
-                                                key={option.value}
-                                                value={option.value}
+                                                key={type.id}
+                                                value={type.id}
                                             >
-                                                {option.label}
+                                                {type.name}
                                             </option>
                                         ))}
                                     </TextField>
@@ -232,14 +215,112 @@ const MoviesToolbar = props => {
                                 >
                                     <TextField
                                         fullWidth
-                                        label="Country"
+                                        label="Select Movie Genre"
                                         margin="dense"
-                                        name="country"
+                                        name="genre"
                                         onChange={handleChange}
                                         required
-                                        value={values.country || ''}
+                                        select
+                                        // eslint-disable-next-line react/jsx-sort-props
+                                        SelectProps={{ native: true }}
+                                        defaultValue={1}
+                                        value={values.genre || 1}
+                                        variant="outlined"
+                                    >
+                                        {genres.map(genre => (
+                                            <option
+                                                key={genre.id}
+                                                value={genre.id}
+                                            >
+                                                {genre.name}
+                                            </option>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Content Rating"
+                                        margin="dense"
+                                        name="rating"
+                                        type="number"
+                                        placeholder="Ex: -15"
+                                        onChange={handleChange}
+                                        required
+                                        value={values.rating || ''}
                                         variant="outlined"
                                     />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Trailer Link"
+                                        margin="dense"
+                                        name="trailer_url"
+                                        onChange={handleChange}
+                                        required
+                                        value={values.trailer_url || ''}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Cover Link"
+                                        margin="dense"
+                                        name="cover_url"
+                                        placeholder="https://www.imdb.com/list/...."
+                                        onChange={handleChange}
+                                        required
+                                        value={values.cover_url || ''}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    md={6}
+                                    xs={12}
+                                >
+                                    <TextField
+                                        fullWidth
+                                        label="Movie Duration (Minutes)"
+                                        margin="dense"
+                                        name="duration"
+                                        placeholder="123"
+                                        onChange={handleChange}
+                                        required
+                                        value={values.duration || ''}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid
+                                    item
+                                    xs={12}
+                                >
+                                <TextField
+                                    fullWidth
+                                    id="release_date"
+                                    label="Release Date"
+                                    type="date"
+                                    value={values.release_date}
+                                    defaultValue="2017-05-24"
+                                    className={classes.textField}
+                                    InputLabelProps={{
+                                    shrink: true,
+                                    }}
+                                />
                                 </Grid>
                             </Grid>
                         </CardContent>

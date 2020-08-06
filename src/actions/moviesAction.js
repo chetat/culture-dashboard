@@ -1,10 +1,18 @@
 import axios from 'axios';
-import { BASE_URL, FETCH_MOVIES, FETCH_ERROR, FETCH_MOVIE,FETCH_MOVIES_YEAR, FETCH_SEARCHED_RESULTS } from './types';
+import { 
+    BASE_URL, FETCH_MOVIES,
+    FETCH_ERROR, FETCH_MOVIE,
+    FETCH_MOVIES_YEAR, 
+    FETCH_SEARCHED_RESULTS, 
+    FETCH_MOVIE_GENRES, FETCH_MOVIE_TYPES
+} from './types';
 
 
 
-export const addMovie = () => async dispatch => {
-    await axios.get(`${BASE_URL}/movies`)
+export const addMovie = (movie) => async dispatch => {
+    movie["category_id"] = 2
+    console.log(movie)
+    await axios.post(`${BASE_URL}/movies`, movie)
         .then(response => {
             dispatch({
                 type: FETCH_MOVIES, payload: response.data.data
@@ -17,13 +25,12 @@ export const addMovie = () => async dispatch => {
         })
 };
 
-
-
 export const fetchMoviesGenres = () => async dispatch => {
-    await axios.get(`${BASE_URL}/movies`)
+    const MOVIE_CATEGORY_ID = 2;
+    await axios.get(`${BASE_URL}/categories/${MOVIE_CATEGORY_ID}/genres`)
         .then(response => {
             dispatch({
-                type: FETCH_MOVIES, payload: response.data.data
+                type: FETCH_MOVIE_GENRES, payload: response.data.data
             })
         })
         .catch(err => {
@@ -35,10 +42,10 @@ export const fetchMoviesGenres = () => async dispatch => {
 
 
 export const fetchMoviesTypes = () => async dispatch => {
-    await axios.get(`${BASE_URL}/movies`)
+    await axios.get(`${BASE_URL}/movies/types`)
         .then(response => {
             dispatch({
-                type: FETCH_MOVIES, payload: response.data.data
+                type: FETCH_MOVIE_TYPES, payload: response.data.data
             })
         })
         .catch(err => {
