@@ -2,9 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import { Card, CardContent, Grid, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,9 +38,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TotalUsers = props => {
-  const { className, totalUsers, ...rest } = props;
-
+const TotalAlbums = props => {
+  const { className, totalAlbums, ...rest } = props;
+  
   const classes = useStyles();
 
   return (
@@ -62,9 +60,9 @@ const TotalUsers = props => {
               gutterBottom
               variant="body2"
             >
-              TOTAL USERS
+              TOTAL ALBUMS
             </Typography>
-            <Typography variant="h3">{totalUsers}</Typography>
+            <Typography variant="h3">{totalAlbums}</Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -72,9 +70,9 @@ const TotalUsers = props => {
   );
 };
 
-TotalUsers.propTypes = {
+TotalAlbums.propTypes = {
   className: PropTypes.string,
-  totalUsers: PropTypes.number
+  totalAlbums: PropTypes.number
 };
 
-export default TotalUsers;
+export default TotalAlbums;

@@ -14,6 +14,7 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
+  MoviesList as MoviesListView,
   NotFound as NotFoundView
 } from './views';
 
@@ -42,6 +43,12 @@ const Routes = () => {
         exact
         layout={MainLayout}
         path="/products"
+      />
+      <RouteWithLayout
+        component={MoviesListView}
+        exact
+        layout={MainLayout}
+        path="/movies"
       />
       <RouteWithLayout
         component={TypographyView}

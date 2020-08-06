@@ -3,15 +3,12 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import {
-  Budget,
   TotalUsers,
-  TasksProgress,
-  TotalProfit,
-  LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
+  TotalMovies,
+  TotalAlbums,
+  TotalBooks
 } from './components';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +18,12 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+
+  const movies = useSelector(state => state.movies.movies)
+  const users = useSelector(state => state.users.users_data)
+  const albums = useSelector(state => state.albums.albums_data)
+  const books = useSelector(state => state.albums.albums_data)
+
 
   return (
     <div className={classes.root}>
@@ -35,7 +38,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <Budget />
+          <TotalMovies totalMovies={movies && movies.length > 0 ? movies.length : 0} />
         </Grid>
         <Grid
           item
@@ -44,7 +47,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <TotalUsers />
+          <TotalUsers totalUsers={users && users.length > 0 ? users.length : 0}/>
         </Grid>
         <Grid
           item
@@ -53,7 +56,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <TasksProgress />
+          <TotalAlbums totalAlbums={albums && albums.length > 0 ? albums.length : 0} />
         </Grid>
         <Grid
           item
@@ -62,43 +65,7 @@ const Dashboard = () => {
           xl={3}
           xs={12}
         >
-          <TotalProfit />
-        </Grid>
-        <Grid
-          item
-          lg={8}
-          md={12}
-          xl={9}
-          xs={12}
-        >
-          <LatestSales />
-        </Grid>
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xl={3}
-          xs={12}
-        >
-          <UsersByDevice />
-        </Grid>
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xl={3}
-          xs={12}
-        >
-          <LatestProducts />
-        </Grid>
-        <Grid
-          item
-          lg={8}
-          md={12}
-          xl={9}
-          xs={12}
-        >
-          <LatestOrders />
+          <TotalBooks totalBooks={books && books.length > 0 ? books.length : 0} />
         </Grid>
       </Grid>
     </div>

@@ -41,47 +41,47 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTable = props => {
-  const { className, users, ...rest } = props;
+const MoviesTable = props => {
+  const { className, movies, ...rest } = props;
 
   const classes = useStyles();
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedMovies, setSelectedMovies] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = event => {
-    const { users } = props;
+    const { movies } = props;
 
-    let selectedUsers;
+    let selectedMovies;
 
     if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
+      selectedMovies = movies.map(movie => movie.id);
     } else {
-      selectedUsers = [];
+      selectedMovies = [];
     }
 
-    setSelectedUsers(selectedUsers);
+    setSelectedMovies(selectedMovies);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsers.indexOf(id);
-    let newSelectedUsers = [];
+    const selectedIndex = selectedMovies.indexOf(id);
+    let newSelectedMovies = [];
 
     if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
+      newSelectedMovies = newSelectedMovies.concat(selectedMovies, id);
     } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
+      newSelectedMovies = newSelectedMovies.concat(selectedMovies.slice(1));
+    } else if (selectedIndex === selectedMovies.length - 1) {
+      newSelectedMovies = newSelectedMovies.concat(selectedMovies.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
+      newSelectedMovies = newSelectedMovies.concat(
+        selectedMovies.slice(0, selectedIndex),
+        selectedMovies.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedUsers(newSelectedUsers);
+    setSelectedMovies(newSelectedMovies);
   };
 
   const handlePageChange = (event, page) => {
@@ -105,34 +105,35 @@ const UsersTable = props => {
                 <TableRow>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedUsers.length === users.length}
+                      checked={selectedMovies.length === movies.length}
                       color="primary"
                       indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
+                        selectedMovies.length > 0 &&
+                        selectedMovies.length < movies.length
                       }
                       onChange={handleSelectAll}
                     />
                   </TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Registration date</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Release Date</TableCell>
+                  <TableCell>Upload Date</TableCell>
+                  <TableCell>Genre</TableCell>
+                  <TableCell>Last Modified</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+                {movies.slice(0, rowsPerPage).map(movie => (
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
-                    selected={selectedUsers.indexOf(user.id) !== -1}
+                    key={movie.id}
+                    selected={selectedMovies.indexOf(movie.id) !== -1}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={selectedUsers.indexOf(user.id) !== -1}
+                        checked={selectedMovies.indexOf(movie.id) !== -1}
                         color="primary"
-                        onChange={event => handleSelectOne(event, user.id)}
+                        onChange={event => handleSelectOne(event, movie.id)}
                         value="true"
                       />
                     </TableCell>
@@ -140,17 +141,20 @@ const UsersTable = props => {
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
-                          src={user.avatarUrl}
+                          src={movie.cover_url}
                         >
-                          {getInitials(user.name)}
+                          {getInitials(movie.title)}
                         </Avatar>
-                        <Typography variant="body1">{user.name}</Typography>
+                        <Typography variant="body1">{movie.title}</Typography>
                       </div>
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.phone}</TableCell>
+                    <TableCell>{moment(movie.release_date).format('DD/MM/YYYY')}</TableCell>
+                    <TableCell>{moment(movie.created_at).format('dddd, MMMM Do YYYY,  HH:MM:SS')}</TableCell>
                     <TableCell>
-                      {moment(user.created_at).format('DD/MM/YYYY')}
+                      {movie.genre}
+                    </TableCell>
+                    <TableCell>
+                      {moment(movie.updated_at).format('DD/MM/YYYY HH:MM:SS')}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -162,7 +166,7 @@ const UsersTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={movies.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -174,9 +178,9 @@ const UsersTable = props => {
   );
 };
 
-UsersTable.propTypes = {
+MoviesTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  movies: PropTypes.array.isRequired
 };
 
-export default UsersTable;
+export default MoviesTable;

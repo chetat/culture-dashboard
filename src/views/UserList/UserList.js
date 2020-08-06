@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import {useSelector} from 'react-redux';
 
 import { UsersToolbar, UsersTable } from './components';
 import mockData from './data';
@@ -13,10 +14,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
+
 const UserList = () => {
   const classes = useStyles();
-
-  const [users] = useState(mockData);
+  const users = useSelector(state => state.users.users_data)
 
   return (
     <div className={classes.root}>

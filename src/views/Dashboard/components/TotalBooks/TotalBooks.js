@@ -40,8 +40,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TotalUsers = props => {
-  const { className, totalUsers, ...rest } = props;
+const TotalBooks = props => {
+  const { className, totalBooks, ...rest } = props;
 
   const classes = useStyles();
 
@@ -62,9 +62,9 @@ const TotalUsers = props => {
               gutterBottom
               variant="body2"
             >
-              TOTAL USERS
+              TOTAL BOOKS
             </Typography>
-            <Typography variant="h3">{totalUsers}</Typography>
+            <Typography variant="h3">{totalBooks}</Typography>
           </Grid>
         </Grid>
       </CardContent>
@@ -72,9 +72,9 @@ const TotalUsers = props => {
   );
 };
 
-TotalUsers.propTypes = {
+TotalBooks.propTypes = {
   className: PropTypes.string,
-  totalUsers: PropTypes.number
+  totalBooks: PropTypes.number
 };
 
-export default TotalUsers;
+export default TotalBooks;
