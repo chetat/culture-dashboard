@@ -57,6 +57,7 @@ const MoviesToolbar = props => {
     const { className, ...rest } = props;
     const [open, setOpen] = useState(false);
     const [values, setValues] = useState({});
+    const [imageVal, setImageVal] = useState({})
 
     const dispatch = useDispatch()
     const classes = useStyles();
@@ -79,6 +80,12 @@ const MoviesToolbar = props => {
         });
     };
 
+    const handleImage = (e) => {
+        setImageVal({
+            ...imageVal,
+            image: e.target.files[0]
+        })
+    }
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -86,9 +93,13 @@ const MoviesToolbar = props => {
     const handleClose = () => {
         setOpen(false);
     };
+    const ranstr = Math.random().toString(10).substring(2, 7) + Math.random().toString(10).substring(2, 7);
 
     const handleSubmit = (e) => {
+        const fd = new FormData()
+        fd.append("image", imageVal)
         e.preventDefault()
+        console.log(imageVal)
         const movie = {
             genre_id: values.genre,
             type_id: values.type,
@@ -96,16 +107,13 @@ const MoviesToolbar = props => {
             synopsis: values.synopsis,
             pg: values.rating,
             trailer_url: values.trailer_url,
-            cover_url: values.cover_url,
             duration: values.duration,
-            category_id: 2
-
+            category_id: 2,
+            release_date: values.release_date
         }
-        dispatch(addMovie(movie))
+        dispatch(addMovie(movie, fd))
         setOpen(false)
-        console.log(values)
     }
-
 
     return (
         <div
@@ -223,7 +231,7 @@ const MoviesToolbar = props => {
                                         select
                                         // eslint-disable-next-line react/jsx-sort-props
                                         SelectProps={{ native: true }}
-                                        defaultValue={1}
+                                        
                                         value={values.genre || 1}
                                         variant="outlined"
                                     >
@@ -280,12 +288,11 @@ const MoviesToolbar = props => {
                                         fullWidth
                                         label="Cover Link"
                                         margin="dense"
+                                        type="file"
                                         name="cover_url"
-                                        placeholder="https://www.imdb.com/list/...."
-                                        onChange={handleChange}
+                                        defaultValue={''}
+                                        onChange={handleImage}
                                         required
-                                        value={values.cover_url || ''}
-                                        variant="outlined"
                                     />
                                 </Grid>
                                 <Grid
@@ -314,9 +321,9 @@ const MoviesToolbar = props => {
                                     id="release_date"
                                     label="Release Date"
                                     type="date"
-                                    value={values.release_date}
-                                    defaultValue="2017-05-24"
-                                    className={classes.textField}
+                                    name="release_date"
+                                    onChange={handleChange}
+                                    value={values.release_date || ''}
                                     InputLabelProps={{
                                     shrink: true,
                                     }}

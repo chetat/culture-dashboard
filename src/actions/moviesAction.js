@@ -7,9 +7,28 @@ import {
     FETCH_MOVIE_GENRES, FETCH_MOVIE_TYPES
 } from './types';
 
+export const addImage = (movie, img_val) => async dispatch => {
+    movie["category_id"] = 2
+    console.log(img_val)
+    await axios.put(`${BASE_URL}/images/upload`, img_val,{
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+            dispatch({
+                type: FETCH_MOVIES, payload: response.data.data
+            })
+        })
+        .catch(err => {
+            dispatch({
+                type: FETCH_ERROR, payload: { error: err, status: err.status }
+            })
+        })
+};
 
 
-export const addMovie = (movie) => async dispatch => {
+export const addMovie = (movie, image) => async dispatch => {
     movie["category_id"] = 2
     console.log(movie)
     await axios.post(`${BASE_URL}/movies`, movie)

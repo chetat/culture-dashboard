@@ -30,7 +30,7 @@ const UserList = () => {
     <div className={classes.root}>
       <MoviesToolbar />
       <div className={classes.content}>
-        <MoviesTable movies={movies} />
+       {movies && <MoviesTable movies={movies} />} 
       </div>
     </div>
   );

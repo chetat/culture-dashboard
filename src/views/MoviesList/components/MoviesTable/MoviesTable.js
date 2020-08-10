@@ -105,7 +105,7 @@ const MoviesTable = props => {
                 <TableRow>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedMovies.length === movies.length}
+                      checked={movies && selectedMovies.length === movies.length}
                       color="primary"
                       indeterminate={
                         selectedMovies.length > 0 &&
@@ -122,7 +122,7 @@ const MoviesTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {movies.slice(0, rowsPerPage).map(movie => (
+                {movies && movies.slice(0, rowsPerPage).map(movie => (
                   <TableRow
                     className={classes.tableRow}
                     hover
@@ -166,7 +166,7 @@ const MoviesTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={movies.length}
+          count={movies && movies.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
