@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const UserList = () => {
+const MoviesList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   
@@ -24,6 +24,7 @@ const UserList = () => {
     dispatch(fetchMovies())
   }, [dispatch])
 
+  
   const movies = useSelector(state => state.movies.movies)
 
   return (
@@ -36,4 +37,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default MoviesList;

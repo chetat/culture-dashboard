@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
@@ -8,7 +8,8 @@ import {
   TotalAlbums,
   TotalBooks
 } from './components';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch,  } from 'react-redux';
+import { fetchMovies } from 'actions/moviesAction';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,12 +19,17 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles();
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchMovies())
+  }, [dispatch])
+  
 
   const movies = useSelector(state => state.movies.movies)
   const users = useSelector(state => state.users.users_data)
   const albums = useSelector(state => state.albums.albums_data)
   const books = useSelector(state => state.albums.albums_data)
-
 
   return (
     <div className={classes.root}>

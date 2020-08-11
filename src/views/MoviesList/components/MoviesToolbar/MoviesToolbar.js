@@ -21,7 +21,8 @@ import {
 
 import { SearchInput } from 'components';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMovie, fetchMoviesTypes, fetchMoviesGenres } from '../../../../actions/moviesAction';
+import { addMovie, fetchMoviesTypes, fetchMoviesGenres, addImage } from '../../../../actions/moviesAction';
+import { formatDistance } from 'date-fns';
 
 
 const useStyles = makeStyles(theme => ({
@@ -96,11 +97,12 @@ const MoviesToolbar = props => {
     const ranstr = Math.random().toString(10).substring(2, 7) + Math.random().toString(10).substring(2, 7);
 
     const handleSubmit = (e) => {
-        const fd = new FormData()
-        fd.append("image", imageVal)
         e.preventDefault()
-        console.log(imageVal)
-        const movie = {
+
+        let fodad = new FormData()
+        fodad.append("file", imageVal["image"])
+        // Display the key/value pairs
+       const movie = {
             genre_id: values.genre,
             type_id: values.type,
             title: values.title,
@@ -111,7 +113,7 @@ const MoviesToolbar = props => {
             category_id: 2,
             release_date: values.release_date
         }
-        dispatch(addMovie(movie, fd))
+        dispatch(addMovie(movie, fodad))
         setOpen(false)
     }
 

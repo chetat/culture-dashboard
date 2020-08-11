@@ -1,37 +1,43 @@
 import axios from 'axios';
 import { 
     BASE_URL, FETCH_MOVIES,
+    MOVIE_LOADING,
     FETCH_ERROR, FETCH_MOVIE,
     FETCH_MOVIES_YEAR, 
     FETCH_SEARCHED_RESULTS, 
     FETCH_MOVIE_GENRES, FETCH_MOVIE_TYPES
 } from './types';
 
-export const addImage = (movie, img_val) => async dispatch => {
-    movie["category_id"] = 2
-    console.log(img_val)
-    await axios.put(`${BASE_URL}/images/upload`, img_val,{
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-            dispatch({
-                type: FETCH_MOVIES, payload: response.data.data
-            })
-        })
-        .catch(err => {
-            dispatch({
-                type: FETCH_ERROR, payload: { error: err, status: err.status }
-            })
-        })
-};
-
 
 export const addMovie = (movie, image) => async dispatch => {
     movie["category_id"] = 2
-    console.log(movie)
-    await axios.post(`${BASE_URL}/movies`, movie)
+    await axios.put(`${BASE_URL}/images/upload`, image,{
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        movie["cover_url"] = response.data["cover_url"]
+        return axios.post(`${BASE_URL}/movies`, movie)
+            .then(response => {
+                dispatch({
+                    type: FETCH_MOVIES, payload: response.data.data
+                })
+            })
+            .catch(err => {
+                dispatch({
+                    type: FETCH_ERROR, payload: { error: err, status: err.status }
+                })
+            })
+      })
+      .catch(err => {
+        dispatch({
+            type: FETCH_ERROR, payload: { error: err, status: err.status }
+        })
+      })
+};
+
+export const fetchMovies = () => async dispatch => {
+    await axios.get(`${BASE_URL}/movies`)
         .then(response => {
             dispatch({
                 type: FETCH_MOVIES, payload: response.data.data
@@ -74,20 +80,6 @@ export const fetchMoviesTypes = () => async dispatch => {
         })
 };
 
-
-export const fetchMovies = () => async dispatch => {
-    await axios.get(`${BASE_URL}/movies`)
-        .then(response => {
-            dispatch({
-                type: FETCH_MOVIES, payload: response.data.data
-            })
-        })
-        .catch(err => {
-            dispatch({
-                type: FETCH_ERROR, payload: { error: err, status: err.status }
-            })
-        })
-};
 
 export const fetchMovie = (id) => async dispatch => {
     await axios.get(`${BASE_URL}/movies/${id}`)
