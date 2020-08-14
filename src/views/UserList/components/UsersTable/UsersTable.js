@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
+import { fetchUsers } from '../../../../actions/usersAction'
 import {
   Card,
   CardActions,
@@ -18,7 +19,7 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
-
+import { useDispatch } from 'react-redux';
 import { getInitials } from 'helpers';
 
 const useStyles = makeStyles(theme => ({
@@ -41,6 +42,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
 const UsersTable = props => {
   const { className, users, ...rest } = props;
 
@@ -50,11 +52,17 @@ const UsersTable = props => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
 
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [dispatch])
+  
+
   const handleSelectAll = event => {
     const { users } = props;
 
     let selectedUsers;
-
     if (event.target.checked) {
       selectedUsers = users.map(user => user.id);
     } else {
@@ -121,7 +129,7 @@ const UsersTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.slice(0, rowsPerPage).map(user => (
+                {users && users.length > 0 ? users.slice(0, rowsPerPage).map(user => (
                   <TableRow
                     className={classes.tableRow}
                     hover
@@ -153,7 +161,7 @@ const UsersTable = props => {
                       {moment(user.created_at).format('DD/MM/YYYY')}
                     </TableCell>
                   </TableRow>
-                ))}
+                )): <h3>No Data</h3>}
               </TableBody>
             </Table>
           </div>

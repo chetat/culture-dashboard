@@ -14,6 +14,7 @@ export const USERS_LOADING = 'USERS_LOADING';
 
 export const USER_REGISTERED = 'USER_REGISTERED';
 export const FETCH_USER = 'FETCH_USER';
+export const FETCH_USER_TYPE = 'FETCH_USER_TYPE'
 
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const AUTH_ERROR = 'AUTH_ERROR';

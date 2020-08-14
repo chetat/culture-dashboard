@@ -22,7 +22,6 @@ import {
 import { SearchInput } from 'components';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMovie, fetchMoviesTypes, fetchMoviesGenres, addImage } from '../../../../actions/moviesAction';
-import { formatDistance } from 'date-fns';
 
 
 const useStyles = makeStyles(theme => ({
@@ -57,7 +56,7 @@ const useStyles = makeStyles(theme => ({
 const MoviesToolbar = props => {
     const { className, ...rest } = props;
     const [open, setOpen] = useState(false);
-    const [values, setValues] = useState({});
+    const [values, setValues] = useState({1:"Select Type"});
     const [imageVal, setImageVal] = useState({})
 
     const dispatch = useDispatch()
@@ -101,11 +100,13 @@ const MoviesToolbar = props => {
 
         let fodad = new FormData()
         fodad.append("file", imageVal["image"])
+
         // Display the key/value pairs
-       const movie = {
+        const movie = {
             genre_id: values.genre,
             type_id: values.type,
             title: values.title,
+            uploader_id: 1,
             synopsis: values.synopsis,
             pg: values.rating,
             trailer_url: values.trailer_url,
@@ -208,14 +209,17 @@ const MoviesToolbar = props => {
                                         value={values.type || '1'}
                                         variant="outlined"
                                     >
-                                        {types.map(type => (
+                                        {types && types.length > 0 ? types.map((type, index) => (
                                             <option
-                                                key={type.id}
+                                                key={index}
                                                 value={type.id}
                                             >
                                                 {type.name}
                                             </option>
-                                        ))}
+                                            )): <option>
+                                            Nothing
+                                        </option>
+                                    }
                                     </TextField>
                                 </Grid>
                                 <Grid
@@ -233,18 +237,18 @@ const MoviesToolbar = props => {
                                         select
                                         // eslint-disable-next-line react/jsx-sort-props
                                         SelectProps={{ native: true }}
-                                        
+
                                         value={values.genre || 1}
                                         variant="outlined"
                                     >
-                                        {genres.map(genre => (
+                                        {genres && genres.length > 0 ? genres.map(genre => (
                                             <option
                                                 key={genre.id}
                                                 value={genre.id}
                                             >
                                                 {genre.name}
                                             </option>
-                                        ))}
+                                        )): <option>Nothing</option>}
                                     </TextField>
                                 </Grid>
                                 <Grid
@@ -318,18 +322,18 @@ const MoviesToolbar = props => {
                                     item
                                     xs={12}
                                 >
-                                <TextField
-                                    fullWidth
-                                    id="release_date"
-                                    label="Release Date"
-                                    type="date"
-                                    name="release_date"
-                                    onChange={handleChange}
-                                    value={values.release_date || ''}
-                                    InputLabelProps={{
-                                    shrink: true,
-                                    }}
-                                />
+                                    <TextField
+                                        fullWidth
+                                        id="release_date"
+                                        label="Release Date"
+                                        type="date"
+                                        name="release_date"
+                                        onChange={handleChange}
+                                        value={values.release_date || ''}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
                                 </Grid>
                             </Grid>
                         </CardContent>

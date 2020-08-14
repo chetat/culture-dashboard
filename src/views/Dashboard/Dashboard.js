@@ -10,6 +10,7 @@ import {
 } from './components';
 import { useSelector, useDispatch,  } from 'react-redux';
 import { fetchMovies } from 'actions/moviesAction';
+import { fetchUsers } from 'actions/usersAction';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,7 +26,10 @@ const Dashboard = () => {
     dispatch(fetchMovies())
   }, [dispatch])
   
-
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [dispatch])
+  
   const movies = useSelector(state => state.movies.movies)
   const users = useSelector(state => state.users.users_data)
   const albums = useSelector(state => state.albums.albums_data)

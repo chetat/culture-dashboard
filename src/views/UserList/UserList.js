@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/styles';
 import {useSelector} from 'react-redux';
 
 import { UsersToolbar, UsersTable } from './components';
-import mockData from './data';
 
 const useStyles = makeStyles(theme => ({
   root: {
